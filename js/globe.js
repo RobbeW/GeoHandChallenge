@@ -3,14 +3,13 @@
 // Sint-Lievenscollege Gent / AI in de Klas.
 // Niet verspreiden zonder naamsvermelding.
 
-// ESM-imports vanaf unpkg (geen bare specifiers)
-import * as THREE    from 'https://unpkg.com/three@0.128.0/build/three.module.js';
-import ThreeGlobe    from 'https://unpkg.com/three-globe@2.24.9/dist/three-globe.module.js';
+import * as THREE from 'three';
+import ThreeGlobe  from 'three-globe';
 
 
-// Exporteer deze variabelen, zodat script.js ze kan importeren
 export let camera, renderer, globe;
 
+const GLOBE_RADIUS = 100;
 const markerGroup   = new THREE.Group();
 const feedbackGroup = new THREE.Group();
 let currentMarker   = null;
@@ -19,10 +18,9 @@ let currentMarker   = null;
  * Initialiseer de 3D-globe in de #globe-canvas container.
  */
 export function initGlobe() {
-  // Scene
   const scene = new THREE.Scene();
 
-  // Camera (exporteren)
+  // Camera
   camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
@@ -31,20 +29,25 @@ export function initGlobe() {
   );
   camera.position.set(0, 0, 300);
 
-  // Renderer (exporteren)
+  // Renderer
   renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.getElementById('globe-canvas').appendChild(renderer.domElement);
 
-  // Globe (exporteren)
+  // Verlichting
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  dirLight.position.set(100, 100, 100);
+  scene.add(dirLight);
+
+  // Globe
   globe = new ThreeGlobe()
     .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
-    .globeRadius(100);
+    .globeRadius(GLOBE_RADIUS);
   scene.add(globe);
 
   // Marker- en feedback-groepen
-  scene.add(markerGroup);
-  scene.add(feedbackGroup);
+  scene.add(markerGroup, feedbackGroup);
 
   // Responsief
   window.addEventListener('resize', () => {
@@ -56,13 +59,13 @@ export function initGlobe() {
   // Animatielus
   (function animate() {
     requestAnimationFrame(animate);
-    globe.rotation.y += 0.0005; // langzaam ronddraaien
+    globe.rotation.y += 0.0005;
     renderer.render(scene, camera);
   })();
 }
 
 /**
- * Zet een gok-marker op de globe bij gegeven lat/lng.
+ * Plaats een gok-marker op de globe.
  */
 export function placeMarker(latLng) {
   if (currentMarker) {
@@ -70,49 +73,54 @@ export function placeMarker(latLng) {
     currentMarker.geometry.dispose();
     currentMarker.material.dispose();
   }
-  const { x, y, z } = latLngToVector3(latLng.lat, latLng.lng, globe.globeRadius());
-  const geom = new THREE.SphereGeometry(2, 16, 16);
-  const mat  = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-  currentMarker = new THREE.Mesh(geom, mat);
+  const { x, y, z } = latLngToVector3(latLng.lat, latLng.lng, GLOBE_RADIUS);
+  currentMarker = new THREE.Mesh(
+    new THREE.SphereGeometry(2, 16, 16),
+    new THREE.MeshBasicMaterial({ color: 0xff0000 })
+  );
   currentMarker.position.set(x, y, z);
   markerGroup.add(currentMarker);
 }
 
 /**
- * Versleep de bestaande marker (bij pinch-move).
+ * Versleep de bestaande marker (bij pinch).
  */
 export function moveMarker(latLng) {
   if (!currentMarker) return;
-  const { x, y, z } = latLngToVector3(latLng.lat, latLng.lng, globe.globeRadius());
+  const { x, y, z } = latLngToVector3(latLng.lat, latLng.lng, GLOBE_RADIUS);
   currentMarker.position.set(x, y, z);
 }
 
 /**
- * Toon de echte locatie en verbind deze met de gok (lijn).
+ * Toon de echte locatie en verbind met de gok.
  */
 export function flipToFeedback(trueLatLng, guessLatLng) {
+  // Wis vorige feedback
   feedbackGroup.clear();
 
   // Echte locatie (groen)
-  const { x: xT, y: yT, z: zT } = latLngToVector3(trueLatLng.lat, trueLatLng.lng, globe.globeRadius());
-  const trueGeom = new THREE.SphereGeometry(2, 16, 16);
-  const trueMat  = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-  const trueMarker = new THREE.Mesh(trueGeom, trueMat);
-  trueMarker.position.set(xT, yT, zT);
+  const { x: xt, y: yt, z: zt } =
+    latLngToVector3(trueLatLng.lat, trueLatLng.lng, GLOBE_RADIUS);
+  const trueMarker = new THREE.Mesh(
+    new THREE.SphereGeometry(2, 16, 16),
+    new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+  );
+  trueMarker.position.set(xt, yt, zt);
   feedbackGroup.add(trueMarker);
 
-  // Lijn van gok naar echt (geel)
-  const { x: xG, y: yG, z: zG } = latLngToVector3(guessLatLng.lat, guessLatLng.lng, globe.globeRadius());
-  const points = [ new THREE.Vector3(xG, yG, zG), new THREE.Vector3(xT, yT, zT) ];
-  const lineGeom = new THREE.BufferGeometry().setFromPoints(points);
-  const lineMat  = new THREE.LineBasicMaterial({ color: 0xffff00 });
-  const line     = new THREE.Line(lineGeom, lineMat);
+  // Lijn van gok → echt (geel)
+  const { x: xg, y: yg, z: zg } =
+    latLngToVector3(guessLatLng.lat, guessLatLng.lng, GLOBE_RADIUS);
+  const line = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(xg, yg, zg),
+      new THREE.Vector3(xt, yt, zt)
+    ]),
+    new THREE.LineBasicMaterial({ color: 0xffff00 })
+  );
   feedbackGroup.add(line);
 }
 
-/**
- * Converteer lat/lng naar 3D-coordinate op de bol.
- */
 function latLngToVector3(lat, lng, radius) {
   const phi   = (90 - lat) * (Math.PI / 180);
   const theta = (lng + 180) * (Math.PI / 180);
