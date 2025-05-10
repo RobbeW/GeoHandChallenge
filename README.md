@@ -21,7 +21,7 @@ Deze educatieve game sluit perfect aan bij het **AI in de Klas**-project en maak
 ---
 
 ## 📁 Projectstructuur
-'''
+```
 GeoHandChallenge/
 │
 ├─ index.html
@@ -35,7 +35,7 @@ GeoHandChallenge/
 ├─ assets/
 │ └─ hints/ ← afbeeldingen voor continent/vlachsilhouetten
 └─ README.md
-''' 
+```
 ## Gebruiken: 
 
 Surf met een moderne browser naar: 
