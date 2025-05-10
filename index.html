@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GeoHand Challenge</title>
+  <!--
+    Voor didactisch gebruik aangepast door Robbe Wulgaert,
+    Sint-Lievenscollege Gent / AI in de Klas.
+    Niet verspreiden zonder naamsvermelding.
+  -->
+  <link rel="stylesheet" href="css/style.css" />
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="eb59c81c-27cb-4e1d-9e8c-bfbe70c48cd9"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Live webcam en landmark-canvas -->
+    <video id="webcam" autoplay playsinline muted></video>
+    <canvas id="canvas"></canvas>
+
+    <!-- Three-Globe container -->
+    <div id="globe-canvas"></div>
+
+    <!-- Status en vragen -->
+    <div id="status">MediaPipe laadt …</div>
+    <div id="question-banner"></div>
+
+    <!-- Teams overlays -->
+    <div id="team-red-overlay" class="team-overlay"></div>
+    <div id="team-blue-overlay" class="team-overlay"></div>
+
+    <!-- Aftelbalk -->
+    <div id="countdown-bar"></div>
+  </div>
+
+  <!-- Links en credits -->
+  <p id="links-para">
+    <a href="https://robbewulgaert.be" target="_blank">AI in de Klas</a> |
+    <a href="https://github.com/your-repo/GeoHandChallenge" target="_blank">Broncode</a> |
+    <a href="https://buymeacoffee.com/aiindeklas" target="_blank">Trakteer me op koffie ❤️</a>
+  </p>
+
+  <!-- MediaPipe en Three.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="//unpkg.com/three-globe"></script>
+
+  <!-- Eigen modules -->
+  <script type="module" src="js/gestures.js"></script>
+  <script type="module" src="js/data.js"></script>
+  <script type="module" src="js/globe.js"></script>
+  <script type="module" src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+/* Voor didactisch gebruik aangepast door Robbe Wulgaert,
+   Sint-Lievenscollege Gent / AI in de Klas.
+   Niet verspreiden zonder naamsvermelding. */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;900&display=swap');
+
+:root {
+  --white: #ffffff;
+  --primary: #5200FF;
+  --secondary: #00FF99;
+  --team-red-overlay: rgba(255, 0, 0, 0.2);
+  --team-blue-overlay: rgba(0, 0, 255, 0.2);
+}
+
+/* Reset & basis */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  background-color: #000;
+  color: var(--white);
+  overflow: hidden;
+}
+
+/* Container voor alle lagen */
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Webcam en landmark-canvas */
+#webcam,
+#canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+#canvas {
+  pointer-events: none;
+}
+
+/* Three-Globe container */
+#globe-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Status en vraagbanner */
+#status {
+  position: absolute;
+  top: 10px; left: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  z-index: 10;
+}
+#question-banner {
+  position: absolute;
+  top: 60px; left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1.25rem;
+  z-index: 10;
+}
+
+/* Team-turn overlays */
+.team-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+}
+#team-red-overlay   { background-color: var(--team-red-overlay); }
+#team-blue-overlay  { background-color: var(--team-blue-overlay); }
+
+/* Countdown bar */
+#countdown-bar {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 8px;
+  background-color: var(--secondary);
+  width: 100%;
+  transform-origin: left;
+}
+#countdown-bar.pulsing {
+  animation: pulse 1s infinite ease-in-out;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+/* Links en credits */
+#links-para {
+  position: absolute;
+  bottom: 10px; left: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  z-index: 10;
+}
+#links-para a {
+  color: var(--primary) !important;
+  text-decoration: none;
+  margin: 0 0.5rem;
+}
