@@ -1,3 +1,4 @@
+// only import your own ESM helpers – no three or three-globe imports here
 import { vragen }                  from './data.js';
 import { initGestures, onGesture } from './gestures.js';
 import {
@@ -9,8 +10,8 @@ import {
   renderer,
   globe
 } from './globe.js';
-import * as THREE from 'three';
-import ThreeGlobe  from 'three-globe';
+
+
 
 
 let currentQuestionIndex = 0;
