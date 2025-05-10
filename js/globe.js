@@ -3,11 +3,13 @@
 // Sint-Lievenscollege Gent / AI in de Klas.
 // Niet verspreiden zonder naamsvermelding.
 
-// ESM-imports vanaf unpkg (geen bare specifiers meer)
+// ESM-imports vanaf unpkg (geen bare specifiers)
 import * as THREE     from 'https://unpkg.com/three@0.128.0/build/three.module.js';
 import ThreeGlobe     from 'https://unpkg.com/three-globe@2.24.9/dist/three-globe.module.js';
 
-let scene, camera, renderer, globe;
+// Exporteer deze variabelen, zodat script.js ze kan importeren
+export let camera, renderer, globe;
+
 const markerGroup   = new THREE.Group();
 const feedbackGroup = new THREE.Group();
 let currentMarker   = null;
@@ -16,8 +18,10 @@ let currentMarker   = null;
  * Initialiseer de 3D-globe in de #globe-canvas container.
  */
 export function initGlobe() {
-  // Scene & camera
-  scene = new THREE.Scene();
+  // Scene
+  const scene = new THREE.Scene();
+
+  // Camera (exporteren)
   camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
@@ -26,12 +30,12 @@ export function initGlobe() {
   );
   camera.position.set(0, 0, 300);
 
-  // Renderer
+  // Renderer (exporteren)
   renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.getElementById('globe-canvas').appendChild(renderer.domElement);
 
-  // Globe
+  // Globe (exporteren)
   globe = new ThreeGlobe()
     .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
     .globeRadius(100);
