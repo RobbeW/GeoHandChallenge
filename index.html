@@ -4,90 +4,48 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>GeoHand Challenge</title>
-  <!--
-    Voor didactisch gebruik aangepast door Robbe Wulgaert,
-    Sint-Lievenscollege Gent / AI in de Klas.
-    Niet verspreiden zonder naamsvermelding.
-  -->
   <link rel="stylesheet" href="./css/style.css" />
 
-  <!-- 1) Import map voor ESM bare-specifiers -->
-  <script type="importmap">
-  {
-    "imports": {
-      "three":                          "https://unpkg.com/three@0.128.0/build/three.module.js",
-      "three-globe":                    "https://unpkg.com/three-globe@2.24.9/dist/three-globe.module.js",
-      "kapsule":                        "https://unpkg.com/kapsule@1.5.0/dist/kapsule.module.js",
-      "@tweenjs/tween.js":              "https://unpkg.com/@tweenjs/tween.js@18.6.4/dist/tween.esm.js",
-      "three-geojson-geometry":         "https://unpkg.com/three-geojson-geometry@2.2.0/dist/three-geojson-geometry.module.js",
-      "three-conic-polygon-geometry":   "https://unpkg.com/three-conic-polygon-geometry@2.1.2/dist/three-conic-polygon-geometry.module.js",
-      "d3-geo":                         "https://unpkg.com/d3-geo@3.0.1/dist/d3-geo.module.js",
-      "d3-array":                       "https://unpkg.com/d3-array@3.2.1/dist/d3-array.module.js",
-      "d3-fetch":                       "https://unpkg.com/d3-fetch@3.0.1/dist/d3-fetch.module.js",
-      "d3-scale":                       "https://unpkg.com/d3-scale@4.2.1/dist/d3-scale.module.js",
-      "h3-js":                        "https://unpkg.com/h3-js@4.2.1/dist/h3-js.es.js",    
-      "three-fatline":                  "https://unpkg.com/three-fatline@1.1.1/dist/three-fatline.module.js",
-      "d3-interpolate": "https://unpkg.com/d3-interpolate@3.0.1/dist/d3-interpolate.module.js",
-      "three/examples/jsm/geometries/TextGeometry.js": "https://unpkg.com/three@0.128.0/examples/jsm/geometries/TextGeometry.js",
-"three/examples/jsm/loaders/FontLoader.js": "https://unpkg.com/three@0.128.0/examples/jsm/loaders/FontLoader.js",
-"three/examples/jsm/renderers/CSS2DRenderer.js": "https://unpkg.com/three@0.128.0/examples/jsm/renderers/CSS2DRenderer.js",
-
-      "topojson-client":                "https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.js",
-      "accessor-fn":                    "https://unpkg.com/accessor-fn@1.5.3/dist/accessor-fn.mjs",
-      "tinycolor2":                     "https://cdn.skypack.dev/tinycolor2",
-      "data-joint":                     "https://cdn.skypack.dev/data-joint",
-      "frame-ticker":                   "https://cdn.skypack.dev/frame-ticker",
-      "index-array-by":                 "https://unpkg.com/index-array-by@1.4.2/index.js",
-      "three/examples/jsm/utils/BufferGeometryUtils.js":
-        "https://unpkg.com/three@0.128.0/examples/jsm/utils/BufferGeometryUtils.js"
-    }
-  }
-  </script>
-
-  <!-- 2) MediaPipe Hands (globals voor hand‐tracking) -->
+  <!-- 1) MediaPipe Hands (globals) -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 
-  <!-- 3) Umami analytics -->
+  <!-- 2) Three.js UMD global -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- 3) Three-Globe UMD/IIFE global -->
+  <script src="https://unpkg.com/three-globe@2.24.9/dist/three-globe.min.js"></script>
+
+  <!-- 4) Your analytics, etc. -->
   <script defer src="https://cloud.umami.is/script.js"
           data-website-id="eb59c81c-27cb-4e1d-9e8c-bfbe70c48cd9"></script>
 </head>
 
-
 <body>
   <div class="container">
-    <!-- Live webcam en landmark-canvas -->
     <video id="webcam" autoplay playsinline muted></video>
     <canvas id="canvas"></canvas>
-
-    <!-- Three-Globe container -->
     <div id="globe-canvas"></div>
-
-    <!-- Status en vraagbanner -->
     <div id="status">MediaPipe laadt …</div>
     <div id="question-banner"></div>
-
-    <!-- Teams overlays -->
     <div id="team-red-overlay" class="team-overlay"></div>
     <div id="team-blue-overlay" class="team-overlay"></div>
-
-    <!-- Aftelbalk -->
     <div id="countdown-bar"></div>
   </div>
 
-  <!-- Links en credits -->
   <p id="links-para">
     <a href="https://robbewulgaert.be" target="_blank">AI in de Klas</a> |
     <a href="https://github.com/RobbeW/GeoHandChallenge" target="_blank">Broncode</a> |
     <a href="https://buymeacoffee.com/aiindeklas" target="_blank">Trakteer me op koffie ❤️</a>
   </p>
 
-  <!-- Eigen modules (ES-modules using globals for THREE and ThreeGlobe) -->
-<script type="module" src="./js/gestures.js"></script>
-<script type="module" src="./js/data.js"></script>
-<script type="module" src="./js/globe.js"></script>
-<script type="module" src="./js/script.js"></script>
 
+  <script type="module" src="./js/gestures.js"></script>
+  <script type="module" src="./js/data.js"></script>
+  <script type="module" src="./js/globe.js"></script>
+  <script type="module" src="./js/script.js"></script>
 </body>
+
+
 </html>
