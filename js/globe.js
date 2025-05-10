@@ -3,13 +3,14 @@
 // Sint-Lievenscollege Gent / AI in de Klas.
 // Niet verspreiden zonder naamsvermelding.
 
-import * as THREE from 'three';
-import ThreeGlobe from 'three-globe';
+// ESM-imports vanaf unpkg (geen bare specifiers meer)
+import * as THREE     from 'https://unpkg.com/three@0.128.0/build/three.module.js';
+import ThreeGlobe     from 'https://unpkg.com/three-globe@2.24.9/dist/three-globe.module.js';
 
 let scene, camera, renderer, globe;
-const markerGroup = new THREE.Group();
+const markerGroup   = new THREE.Group();
 const feedbackGroup = new THREE.Group();
-let currentMarker = null;
+let currentMarker   = null;
 
 /**
  * Initialiseer de 3D-globe in de #globe-canvas container.
@@ -32,7 +33,7 @@ export function initGlobe() {
 
   // Globe
   globe = new ThreeGlobe()
-    .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+    .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
     .globeRadius(100);
   scene.add(globe);
 
@@ -40,14 +41,14 @@ export function initGlobe() {
   scene.add(markerGroup);
   scene.add(feedbackGroup);
 
-  // Resize-handler
+  // Responsief
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  // Start animatie­loop
+  // Animatielus
   (function animate() {
     requestAnimationFrame(animate);
     globe.rotation.y += 0.0005; // langzaam ronddraaien
@@ -57,17 +58,13 @@ export function initGlobe() {
 
 /**
  * Zet een gok-marker op de globe bij gegeven lat/lng.
- * @param {{lat:number, lng:number}} latLng
  */
 export function placeMarker(latLng) {
-  // Verwijder oude
   if (currentMarker) {
     markerGroup.remove(currentMarker);
     currentMarker.geometry.dispose();
     currentMarker.material.dispose();
-    currentMarker = null;
   }
-
   const { x, y, z } = latLngToVector3(latLng.lat, latLng.lng, globe.globeRadius());
   const geom = new THREE.SphereGeometry(2, 16, 16);
   const mat  = new THREE.MeshBasicMaterial({ color: 0xff0000 });
@@ -77,8 +74,7 @@ export function placeMarker(latLng) {
 }
 
 /**
- * Verplaats de bestaande marker (bij drag).
- * @param {{lat:number, lng:number}} latLng
+ * Versleep de bestaande marker (bij pinch-move).
  */
 export function moveMarker(latLng) {
   if (!currentMarker) return;
@@ -87,15 +83,12 @@ export function moveMarker(latLng) {
 }
 
 /**
- * Toon de echte locatie en verbind deze met de gok met een lijn.
- * @param {{lat:number, lng:number}} trueLatLng
- * @param {{lat:number, lng:number}} guessLatLng
+ * Toon de echte locatie en verbind deze met de gok (lijn).
  */
 export function flipToFeedback(trueLatLng, guessLatLng) {
-  // Maak feedbackGroup leeg
   feedbackGroup.clear();
 
-  // Echte locatie-marker (groen)
+  // Echte locatie (groen)
   const { x: xT, y: yT, z: zT } = latLngToVector3(trueLatLng.lat, trueLatLng.lng, globe.globeRadius());
   const trueGeom = new THREE.SphereGeometry(2, 16, 16);
   const trueMat  = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -105,9 +98,7 @@ export function flipToFeedback(trueLatLng, guessLatLng) {
 
   // Lijn van gok naar echt (geel)
   const { x: xG, y: yG, z: zG } = latLngToVector3(guessLatLng.lat, guessLatLng.lng, globe.globeRadius());
-  const points = [];
-  points.push(new THREE.Vector3(xG, yG, zG));
-  points.push(new THREE.Vector3(xT, yT, zT));
+  const points = [ new THREE.Vector3(xG, yG, zG), new THREE.Vector3(xT, yT, zT) ];
   const lineGeom = new THREE.BufferGeometry().setFromPoints(points);
   const lineMat  = new THREE.LineBasicMaterial({ color: 0xffff00 });
   const line     = new THREE.Line(lineGeom, lineMat);
@@ -115,16 +106,11 @@ export function flipToFeedback(trueLatLng, guessLatLng) {
 }
 
 /**
- * Converteer lat/lng naar 3D-coordinate op een bol met gegeven radius.
- * @param {number} lat
- * @param {number} lng
- * @param {number} radius
- * @returns {{x:number,y:number,z:number}}
+ * Converteer lat/lng naar 3D-coordinate op de bol.
  */
 function latLngToVector3(lat, lng, radius) {
   const phi   = (90 - lat) * (Math.PI / 180);
   const theta = (lng + 180) * (Math.PI / 180);
-
   return {
     x: -radius * Math.sin(phi) * Math.cos(theta),
     y:  radius * Math.cos(phi),
