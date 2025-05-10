@@ -4,7 +4,9 @@
 // Niet verspreiden zonder naamsvermelding.
 
 // ESM-imports vanaf unpkg
-import * as THREE       from 'https://unpkg.com/three@0.128.0/build/three.module.js';
+import * as THREE    from 'https://unpkg.com/three@0.128.0/build/three.module.js';
+import ThreeGlobe    from 'https://unpkg.com/three-globe@2.24.9/dist/three-globe.module.js';
+
 import { vragen }       from './data.js';
 import { initGestures, onGesture } from './gestures.js';
 // Let op: globe.js moet nu ook camera, renderer en globe exporteren
