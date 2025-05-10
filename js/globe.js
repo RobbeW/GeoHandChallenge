@@ -4,8 +4,9 @@
 // Niet verspreiden zonder naamsvermelding.
 
 // ESM-imports vanaf unpkg (geen bare specifiers)
-import * as THREE     from 'https://unpkg.com/three@0.128.0/build/three.module.js';
-import ThreeGlobe     from 'https://unpkg.com/three-globe@2.24.9/dist/three-globe.module.js';
+import * as THREE    from 'https://unpkg.com/three@0.128.0/build/three.module.js';
+import ThreeGlobe    from 'https://unpkg.com/three-globe@2.24.9/dist/three-globe.module.js';
+
 
 // Exporteer deze variabelen, zodat script.js ze kan importeren
 export let camera, renderer, globe;
